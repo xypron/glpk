@@ -19,6 +19,8 @@ AC_HELP_STRING([--with-gmp],
       esac],
    [with_gmp=no])
 
+AC_DEFINE([CDECL],[],[__cdecl])
+
 AC_ARG_ENABLE(dl,
 AC_HELP_STRING([--enable-dl],
    [enable shared library support [[default=no]]]),

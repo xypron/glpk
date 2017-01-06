@@ -25,6 +25,7 @@
 #include "draft.h"
 #include "env.h"
 #include "glpios.h"
+#include "config.h"
 
 /***********************************************************************
 *  NAME
@@ -66,7 +67,7 @@ struct info
       /* lower bound to objective degradation */
 };
 
-static int fcmp(const void *arg1, const void *arg2)
+static int CDECL fcmp(const void *arg1, const void *arg2)
 {     const struct info *info1 = arg1, *info2 = arg2;
       if (info1->deg == 0.0 && info2->deg == 0.0)
       {  if (info1->eff > info2->eff) return -1;

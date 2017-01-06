@@ -26,6 +26,7 @@
 #include "prob.h"
 #include "wclique.h"
 #include "wclique1.h"
+#include "config.h"
 
 /***********************************************************************
 *  cfg_build_graph - build conflict graph
@@ -197,7 +198,7 @@
 struct term { int ind; double val; };
 /* term a[j] * z[j] used to sort a[j]'s */
 
-static int fcmp(const void *e1, const void *e2)
+static int CDECL fcmp(const void *e1, const void *e2)
 {     /* auxiliary routine called from qsort */
       const struct term *t1 = e1, *t2 = e2;
       if (t1->val > t2->val)

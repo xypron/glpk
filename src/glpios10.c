@@ -25,6 +25,7 @@
 #include "env.h"
 #include "glpios.h"
 #include "rng.h"
+#include "config.h"
 
 /***********************************************************************
 *  NAME
@@ -56,7 +57,7 @@ struct VAR
       /* sorting key */
 };
 
-static int fcmp(const void *x, const void *y)
+static int CDECL fcmp(const void *x, const void *y)
 {     /* comparison routine */
       const struct VAR *vx = x, *vy = y;
       if (vx->d > vy->d)

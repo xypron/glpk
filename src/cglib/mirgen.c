@@ -48,6 +48,7 @@ Chris Matrakidis
 #include "env.h"
 #include "prob.h"
 #include "spv.h"
+#include "config.h"
 
 #define MIR_DEBUG 0
 
@@ -798,7 +799,7 @@ static int cmir_ineq(const int n, const double a[], const double b,
 
 struct vset { int j; double v; };
 
-static int cmir_cmp(const void *p1, const void *p2)
+static int CDECL cmir_cmp(const void *p1, const void *p2)
 {     const struct vset *v1 = p1, *v2 = p2;
       if (v1->v < v2->v) return -1;
       if (v1->v > v2->v) return +1;

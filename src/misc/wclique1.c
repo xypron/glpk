@@ -23,6 +23,7 @@
 
 #include "env.h"
 #include "wclique1.h"
+#include "config.h"
 
 /***********************************************************************
 *  NAME
@@ -64,7 +65,7 @@
 
 struct vertex { int i; double cw; };
 
-static int fcmp(const void *xx, const void *yy)
+static int CDECL fcmp(const void *xx, const void *yy)
 {     const struct vertex *x = xx, *y = yy;
       if (x->cw > y->cw) return -1;
       if (x->cw < y->cw) return +1;

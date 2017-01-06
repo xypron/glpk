@@ -23,6 +23,7 @@
 
 #include "env.h"
 #include "prob.h"
+#include "config.h"
 
 struct var
 {     /* structural variable */
@@ -32,7 +33,7 @@ struct var
       /* penalty value */
 };
 
-static int fcmp(const void *ptr1, const void *ptr2)
+static int CDECL fcmp(const void *ptr1, const void *ptr2)
 {     /* this routine is passed to the qsort() function */
       struct var *col1 = (void *)ptr1, *col2 = (void *)ptr2;
       if (col1->q < col2->q) return -1;

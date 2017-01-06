@@ -23,6 +23,7 @@
 
 #include "env.h"
 #include "prob.h"
+#include "config.h"
 
 /***********************************************************************
 *  NAME
@@ -60,7 +61,7 @@
 
 struct var { int j; double f; };
 
-static int fcmp(const void *p1, const void *p2)
+static int CDECL fcmp(const void *p1, const void *p2)
 {     const struct var *v1 = p1, *v2 = p2;
       if (v1->f > v2->f) return -1;
       if (v1->f < v2->f) return +1;

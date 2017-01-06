@@ -23,6 +23,7 @@
 
 #include "env.h"
 #include "spychuzc.h"
+#include "config.h"
 
 /***********************************************************************
 *  spy_chuzc_std - choose non-basic variable (dual textbook ratio test)
@@ -275,7 +276,7 @@ done: return q;
 *  array bp only the break-points that correspond to positive increment
 *  of the dual objective. */
 
-static int fcmp(const void *v1, const void *v2)
+static int CDECL fcmp(const void *v1, const void *v2)
 {     const SPYBP *p1 = v1, *p2 = v2;
       if (p1->teta < p2->teta)
          return -1;
@@ -497,7 +498,7 @@ int spy_ls_eval_bp(SPXLP *lp, const double d[/*1+n-m*/],
 *  On exit the routine also replaces the parameter slope with a new
 *  value that corresponds to the new last break-point bp[num1]. */
 
-static int fcmp(const void *v1, const void *v2)
+static int CDECL fcmp(const void *v1, const void *v2)
 {     const SPYBP *p1 = v1, *p2 = v2;
       if (p1->teta < p2->teta)
          return -1;
