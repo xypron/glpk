@@ -456,7 +456,7 @@ Declare PtrSafe Function glp_mpl_read_model Lib "glpk.dll" (ByVal tran As LongPt
 ' read and translate data section
 Declare PtrSafe Function glp_mpl_read_data Lib "glpk.dll" (ByVal tran As LongPtr, ByRef fname As Byte) As Long
 ' generate the model
-Declare PtrSafe Function glp_mpl_generate Lib "glpk.dll" (ByVal tran As LongPtr, ByRef fname As Byte) As Long
+Declare PtrSafe Function glp_mpl_generate Lib "glpk.dll" (ByVal tran As LongPtr, ByVal fname As LongPtr) As Long
 ' build LP/MIP problem instance from the model
 Declare PtrSafe Function glp_mpl_build_prob Lib "glpk.dll" (ByVal tran As LongPtr, ByVal lp As LongPtr) As Long
 ' postsolve the model
