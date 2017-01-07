@@ -64,9 +64,11 @@ Public Const GLP_OPT = 5             ' solution is optimal
 Public Const GLP_UNBND = 6           ' solution is unbounded
 
 ' factorization type:
-Public Const GLP_BF_FT = 1           ' LUF + Forrest-Tomlin
-Public Const GLP_BF_BG = 2           ' LUF + Schur compl. + Bartels-Golub
-Public Const GLP_BF_GR = 3           ' LUF + Schur compl. + Givens rotation
+Public Const GLP_BF_LUF = &H0        ' plain LU-factorization
+Public Const GLP_BF_BTF = &H10       ' block triangular LU-factorization
+Public Const GLP_BF_FT = &H1         ' LUF + Forrest-Tomlin
+Public Const GLP_BF_BG = &H2         ' LUF + Schur compl. + Bartels-Golub
+Public Const GLP_BF_GR = &H3         ' LUF + Schur compl. + Givens rotation
 
 ' message level:
 Public Const GLP_MSG_OFF = 0         ' no output
@@ -87,6 +89,12 @@ Public Const GLP_PT_PSE = &H22       ' projected steepest edge
 ' ratio test technique:
 Public Const GLP_RT_STD = &H11       ' standard (textbook)
 Public Const GLP_RT_HAR = &H22       ' two-pass Harris' ratio test
+
+' ordering algorithm
+Public Const GLP_ORD_NONE = 0        ' natural (original) ordering
+Public Const GLP_ORD_QMD = 1         ' quotient minimum degree (QMD)
+Public Const GLP_ORD_AMD = 2         ' approx. minimum degree (AMD)
+Public Const GLP_ORD_SYMAMD = 3      ' approx. minimum degree (SYMAMD)
 
 ' branching technique:
 Public Const GLP_BR_FFV = 1          ' first fractional variable
@@ -183,7 +191,7 @@ Public Type glp_bfcp
   upd_tol As Double                  ' fhv.upd_tol
   nrs_max As Long                    ' lpf.n_max
   rs_size As Long                    ' lpf.v_size
-  foo_bar(38) As Double              ' (reserved)
+  foo_bar(37) As Double              ' (reserved)
 End Type
 
 Public Type glp_smcp
@@ -204,6 +212,13 @@ Public Type glp_smcp
   presolve As Long                   ' enable/disable using LP presolver
   align_1 As Long                    ' only used for alignment
   foo_bar(35) As Double              ' (reserved)
+End Type
+
+Public Type glp_iptcp
+  ' interior-point solver control parameters
+  msg_lev As Long                    ' message level (see glp_smcp)
+  ord_alg As Long                    ' ordering algorithm:
+  foo_bar(47) As Double              ' (reserved)
 End Type
 
 Public Type glp_iocp
@@ -236,8 +251,17 @@ Public Type glp_iocp
   presolve As Long                   ' enable/disable using MIP presolver
   binarize As Long                   ' try to binarize long variables
   fp_heur As Long                    ' feasibility pump heuristic
+  ps_heur As Long                    ' proximity search heuristic
+  ps_tm_lim As Long                  ' proxy time limit, milliseconds
+  sr_heur As Long                    ' simple rounding heuristic
+  use_sol As Long                    ' use existing solution
+#If Win64 Then
   align_3 As Long                    ' only used for alignment
-  foo_bar(29) As Double              ' (reserved)
+#End If
+  save_sol As LongPtr                ' filename to save every new solution
+  alien As Long                      ' use alien solver
+  flip As Long                       ' use long-step dual simplex
+  foo_bar(22) As Double              ' (reserved)
 End Type
 
 Public Type glp_attr
@@ -247,6 +271,22 @@ Public Type glp_attr
   klass As Long                      ' the row class descriptor:
   align_1 As Long                    ' only used for alignment
   foo_bar(6) As Double               ' (reserved)
+End Type
+
+Public Type glp_mpscp
+  'MPS format control parameters
+  blank As Long                      ' character code to replace blanks in symbolic names
+#If Win64 Then
+  align_1 As Long                    ' only used for alignment
+#End If
+  obj_name As LongPtr                ' objective row name
+  tol_mps As Double                  ' zero tolerance for MPS data
+  foo_bar(16) As Double              ' (reserved for use in the future)
+End Type
+
+Public Type glp_cpxcp
+  ' CPLEX LP format control parameters
+  foo_bar(19) As Double              ' (reserved for use in the future)
 End Type
 
 ' Problem creating and modifying routines
