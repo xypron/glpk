@@ -19,6 +19,8 @@ Attribute VB_Name = "glpk"
 ' along with GLPK. If not, see <http://www.gnu.org/licenses/>.
 
 Option Explicit
+' error handling
+Public Const GLPK_LIB_ERROR = &HE77  ' Error in GLPK library
 
 ' optimization direction flag:
 Public Const GLP_MIN = 1             ' minimization
@@ -466,6 +468,10 @@ Declare PtrSafe Sub glp_mpl_free_wksp Lib "glpk.dll" (ByVal tran As LongPtr)
 Declare PtrSafe Function glp_version Lib "glpk.dll" () As Long
 ' BEWARE: info has to be a variant variable that is valid until the terminal hook function is set to 0.!
 Declare PtrSafe Sub glp_term_hook Lib "glpk.dll" (ByVal func As LongPtr, Optional ByRef info As Variant)
+' display fatal error message and terminate execution
+Declare PtrSafe Sub glp_error_ Lib "glpk.dll" (ByRef file As Byte, line As Long)
+' check for error state
+Declare PtrSafe Function glp_at_error Lib "glpk.dll" () As Long
 ' BEWARE: info has to be a variant variable that is valid until the error hook function is set to 0.!
 Declare PtrSafe Sub glp_error_hook Lib "glpk.dll" (ByVal func As LongPtr, Optional ByRef info As Variant)
 Declare PtrSafe Function glp_free_env Lib "glpk.dll" () As Integer
@@ -476,7 +482,7 @@ Declare PtrSafe Function SysAllocStringByteLen Lib "oleaut32" (ByVal pwsz As Lon
 ' You can pass this function to glp_error_hook.
 Function error_hook(ByRef info As Variant)
   glp_free_env
-  Err.Raise 1004, "error_hook", "Error when calling GLPK"
+  Err.Raise GLPK_LIB_ERROR, "error_hook", "Error when calling GLPK library"
 End Function
 
 ' Echos terminal output to debug console.
@@ -487,7 +493,9 @@ End Function
 ' @return 1 for no output
 Function term_hook(ByRef info As Variant, ByVal textptr As LongPtr) As Long
   Dim text As String
-  
+  If glp_at_error() Then
+    Debug.Print ">>> ";
+  End If
   text = SysAllocStringByteLen(textptr, 512)
   text = Left$(text, InStr(text, Chr$(0)) - 1)
   Debug.Print text;
@@ -497,7 +505,6 @@ End Function
 Function str2bytes(name As String) As Byte()
     str2bytes = StrConv(name & Chr(0), vbFromUnicode)
 End Function
-
 
 ' Writes simplex solution to debug console
 ' @param lp problem

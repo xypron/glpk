@@ -35,6 +35,11 @@ Sub mip()
   Dim ret As Integer
   Dim name() As Byte
 
+  On Error GoTo error0
+  
+  ' Register error hook function
+  glp_error_hook AddressOf error_hook
+  
   ' Register terminal hook function
   glp_term_hook AddressOf term_hook
   
@@ -84,8 +89,8 @@ Sub mip()
   glp_set_obj_coef lp, 2, 12#
 
   ' Write model to file
-  name = str2bytes("c:\temp\mip.lp")
-  ret = glp_write_lp(lp, 0, name(0))
+  ' name = str2bytes("c:\temp\mip.lp")
+  ' ret = glp_write_lp(lp, 0, name(0))
 
   ' Solve model
   glp_init_iocp iocp
@@ -98,11 +103,20 @@ Sub mip()
   Else
     Debug.Print "The problem could not be solved"
   End If
-    
+
   ' Free memory
     glp_delete_prob lp
-  
-  ' Deregister terminal hook function
-  glp_term_hook 0, 0
-End Sub
 
+  ' Deregister error hook function
+  glp_error_hook 0, 0
+
+  Exit Sub
+
+error0:
+  Debug.Print Format(Err.Number, "0 - "); Err.Description
+
+  If Err.Number <> GLPK_LIB_ERROR Then
+    On Error GoTo 0
+    Resume
+  End If
+End Sub

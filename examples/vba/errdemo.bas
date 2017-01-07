@@ -1,4 +1,23 @@
 Attribute VB_Name = "errdemo"
+' errdemo.bas
+'
+' Copyright (C) 2017, Heinrich Schuchardt <xypron.glpk@gmx.de>.
+'
+' This program is free software: you can redistribute it and/or modify
+' it under the terms of the GNU General Public License as published by
+' the Free Software Foundation, either version 3 of the License, or
+' (at your option) any later version.
+'
+' This program is distributed in the hope that it will be useful,
+' but WITHOUT ANY WARRANTY; without even the implied warranty of
+' MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+' GNU General Public License for more details.
+'
+' You should have received a copy of the GNU General Public License
+' along with this program.  If not, see <http://www.gnu.org/licenses/>.
+' You should have received a copy of the GNU General Public License
+' along with GLPK. If not, see <http://www.gnu.org/licenses/>.
+
 Option Explicit
 
 Sub errdemo()
@@ -56,23 +75,16 @@ Private Sub lp(force_error As Boolean)
   End If
   glp_delete_prob lp
   
-  ' Deregister terminal hook function
-  glp_term_hook 0, 0
-  
+  ' Deregister error hook function
+  glp_error_hook 0, 0
+
   Exit Sub
 
 error0:
-  Debug.Print "Error in GLPK library has been caught"
-  Debug.Print Err.Description
-  
-  On Error GoTo 0
-  ' Register error hook function
-  glp_error_hook 0, 0
-  
+  Debug.Print Format(Err.Number, "0 - "); Err.Description
+
+  If Err.Number <> GLPK_LIB_ERROR Then
+    On Error GoTo 0
+    Resume
+  End If
 End Sub
-
-
-
-
-
-

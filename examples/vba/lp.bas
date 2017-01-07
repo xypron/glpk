@@ -37,6 +37,11 @@ Sub lp()
   Dim ind(2) As Long
   Dim val(2) As Double
   
+  On Error GoTo error0
+  
+  ' Register error hook function
+  glp_error_hook AddressOf error_hook
+  
   ' Register terminal hook function
   glp_term_hook AddressOf term_hook
   
@@ -91,8 +96,8 @@ Sub lp()
   glp_set_obj_coef lp, 3, -1
 
   ' Write model to file
-  name = str2bytes("c:\temp\lp.lp")
-  ret = glp_write_lp(lp, 0, name(0))
+  ' name = str2bytes("c:\temp\lp.lp")
+  ' ret = glp_write_lp(lp, 0, name(0))
 
   ' Solve model
   ret = glp_init_smcp(smcp)
@@ -102,7 +107,21 @@ Sub lp()
   If ret = 0 Then
     write_lp_solution (lp)
   End If
+
+  ' Free memory
   glp_delete_prob lp
-  
+
+  ' Deregister error hook function
+  glp_error_hook 0, 0
+
+  Exit Sub
+
+error0:
+  Debug.Print Format(Err.Number, "0 - "); Err.Description
+
+  If Err.Number <> GLPK_LIB_ERROR Then
+    On Error GoTo 0
+    Resume
+  End If
 End Sub
 
