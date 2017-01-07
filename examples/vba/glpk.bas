@@ -464,18 +464,73 @@ Declare PtrSafe Function glp_mpl_postsolve Lib "glpk.dll" (ByVal tran As LongPtr
 ' free the MathProg translator workspace
 Declare PtrSafe Sub glp_mpl_free_wksp Lib "glpk.dll" (ByVal tran As LongPtr)
 
-' Miscellaneous API routines
-Declare PtrSafe Function glp_version Lib "glpk.dll" () As Long
+' Branch-and-cut API routines
+' determine reason for calling the callback routine
+Declare PtrSafe Function glp_ios_reason Lib "glpk.dll" (ByVal tree As LongPtr) As Long
+' access the problem object
+Declare PtrSafe Function glp_ios_get_problem Lib "glpk.dll" (ByVal tree As LongPtr) As LongPtr
+' determine additional row attributes
+Declare PtrSafe Sub glp_ios_row_attr Lib "glpk.dll" (ByVal tree As LongPtr, ByVal i As Long, ByRef attr As glp_attr)
+' compute relative MIP gap
+Declare PtrSafe Function glp_ios_mip_gap Lib "glpk.dll" (ByVal tree As LongPtr) As Double
+' select subproblem to continue the search
+Declare PtrSafe Sub glp_ios_select_node Lib "glpk.dll" (ByVal tree As LongPtr, ByVal p As Long)
+' provide solution found by heuristic
+Declare PtrSafe Function glp_ios_heur_sol Lib "glpk.dll" (ByVal tree As LongPtr, ByRef x As Double) As Long
+' check if can branch upon specied variable
+Declare PtrSafe Function glp_ios_can_branch Lib "glpk.dll" (ByVal tree As LongPtr, ByVal j As Long) As Long
+' choose variable to branch upon
+Declare PtrSafe Sub glp_ios_branch_upon Lib "glpk.dll" (ByVal tree As LongPtr, ByVal j As Long, ByVal sel As Long)
+' terminate the solution process
+Declare PtrSafe Sub glp_ios_terminate Lib "glpk.dll" (ByVal tree As LongPtr)
+
+' Search tree exploring routines
+' determine size of search tree
+Declare PtrSafe Sub glp_ios_tree_size Lib "glpk.dll" (ByVal tree As LongPtr, ByRef a_cnt As Long, ByRef n_cnt As Long, ByRef t_cnt As Long)
+' determine current active subproblem
+Declare PtrSafe Function glp_ios_curr_node Lib "glpk.dll" (ByVal tree As LongPtr) As Long
+' determine next active subproblem
+Declare PtrSafe Function glp_ios_next_node Lib "glpk.dll" (ByVal tree As LongPtr, ByVal p As Long) As Long
+' determine previous active subproblem
+Declare PtrSafe Function glp_ios_prev_node Lib "glpk.dll" (ByVal tree As LongPtr, ByVal p As Long) As Long
+' determine parent subproblem
+Declare PtrSafe Function glp_ios_up_node Lib "glpk.dll" (ByVal tree As LongPtr, ByVal p As Long) As Long
+' determine subproblem level
+Declare PtrSafe Function glp_ios_node_level Lib "glpk.dll" (ByVal tree As LongPtr, ByVal p As Long) As Long
+' determine subproblem local bound
+Declare PtrSafe Function glp_ios_node_bound Lib "glpk.dll" (ByVal tree As LongPtr, ByVal p As Long) As Double
+' determine active subproblem with best local bound
+Declare PtrSafe Function glp_ios_best_node Lib "glpk.dll" (ByVal tree As LongPtr) As Long
+
+' GLPK environment routines
+' initialize GLPK environment
+Declare PtrSafe Function glp_init_env Lib "glpk.dll" () As Long
+' determine library version
+Declare PtrSafe Function glp_version Lib "glpk.dll" () As LongPtr
+' free GLPK environment
+Declare PtrSafe Function glp_free_env Lib "glpk.dll" () As Long
+' enable/disable terminal output
+Declare PtrSafe Function glp_term_out Lib "glpk.dll" (ByVal flag As Long) As Long
+' intercept terminal output
 ' BEWARE: info has to be a variant variable that is valid until the terminal hook function is set to 0.!
 Declare PtrSafe Sub glp_term_hook Lib "glpk.dll" (ByVal func As LongPtr, Optional ByRef info As Variant)
+' start copying terminal output
+Declare PtrSafe Function glp_open_tee Lib "glpk.dll" (ByRef fname As Byte) As Long
+' start copying terminal output
+Declare PtrSafe Function glp_close_tee Lib "glpk.dll" () As Long
 ' display fatal error message and terminate execution
 Declare PtrSafe Sub glp_error_ Lib "glpk.dll" (ByRef file As Byte, line As Long)
 ' check for error state
 Declare PtrSafe Function glp_at_error Lib "glpk.dll" () As Long
+' install hook to intercept abnormal termination
 ' BEWARE: info has to be a variant variable that is valid until the error hook function is set to 0.!
 Declare PtrSafe Sub glp_error_hook Lib "glpk.dll" (ByVal func As LongPtr, Optional ByRef info As Variant)
-Declare PtrSafe Function glp_free_env Lib "glpk.dll" () As Integer
+' get memory usage information
+Declare PtrSafe Sub glp_mem_usage Lib "glpk.dll" (ByRef count As Long, ByRef cpeak As Long, ByRef total As LongPtr, ByRef tpeak As LongPtr)
+' set memory usage limit
+Declare PtrSafe Sub glp_mem_limit Lib "glpk.dll" (ByVal limit As Long)
 
+' Converts a C string to a byte array.
 Declare PtrSafe Function SysAllocStringByteLen Lib "oleaut32" (ByVal pwsz As LongPtr, ByVal length As Long) As String
 
 ' Catches GLPK library errors and raises VBA error.
@@ -573,3 +628,13 @@ Sub write_mip_solution(lp As LongPtr)
      Debug.Print name & " = " & val
    Next i
 End Sub
+
+' Returns function address.
+' This conversion routine is needed because AddressOf
+' cannot be used in assignments.
+'
+' @param func function passed with AddressOf operator
+' @returns address of function   func
+Public Function glpk_addressof(func As LongPtr) As LongPtr
+  glpk_addressof = func
+End Function
