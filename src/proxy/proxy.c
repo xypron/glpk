@@ -165,7 +165,7 @@ int dir;                /* Minimization or maximization problem */
 int ncols;              /* Number of structural variables of the
                            problem */
 
-time_t GLOtstart;       /* starting time of the algorithm */
+double GLOtstart;       /* starting time of the algorithm */
 
 glp_prob *lp_ref;       /* glp problem for refining only*/
 
