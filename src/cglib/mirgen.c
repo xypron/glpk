@@ -21,6 +21,10 @@
 *  along with GLPK. If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #if 1 /* 29/II-2016 by Chris */
 /*----------------------------------------------------------------------
 Subject: Mir cut generation performance improvement
