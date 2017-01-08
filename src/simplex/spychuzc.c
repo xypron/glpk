@@ -501,7 +501,11 @@ int spy_ls_eval_bp(SPXLP *lp, const double d[/*1+n-m*/],
 *  On exit the routine also replaces the parameter slope with a new
 *  value that corresponds to the new last break-point bp[num1]. */
 
+#ifndef __WOE__
 static int fcmp(const void *v1, const void *v2)
+#else
+static int __cdecl fcmp(const void *v1, const void *v2)
+#endif
 {     const SPYBP *p1 = v1, *p2 = v2;
       if (p1->teta < p2->teta)
          return -1;
