@@ -21,6 +21,10 @@
 *  along with GLPK. If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include <ctype.h>
 #include <float.h>
 #include <limits.h>
@@ -928,7 +932,11 @@ static int parse_cmdline(struct csa *csa, int argc, char *argv[])
 typedef struct { double rhs, pi; } v_data;
 typedef struct { double low, cap, cost, x; } a_data;
 
+#ifndef __WOE__
 int main(int argc, char *argv[])
+#else
+int __cdecl main(int argc, char *argv[])
+#endif
 {     /* stand-alone LP/MIP solver */
       struct csa _csa, *csa = &_csa;
       int ret;
