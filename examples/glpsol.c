@@ -3,7 +3,7 @@
 /***********************************************************************
 *  This code is part of GLPK (GNU Linear Programming Kit).
 *
-*  Copyright (C) 2000-2016 Andrew Makhorin, Department for Applied
+*  Copyright (C) 2000-2017 Andrew Makhorin, Department for Applied
 *  Informatics, Moscow Aviation Institute, Moscow, Russia. All rights
 *  reserved. E-mail: <mao@gnu.org>.
 *
@@ -421,8 +421,7 @@ static void print_version(int briefly)
 {     /* print version information */
       xprintf("GLPSOL: GLPK LP/MIP Solver, v%s\n", glp_version());
       if (briefly) goto done;
-      xprintf("\n");
-      xprintf("Copyright (C) 2000-2015 Andrew Makhorin, Department for "
+      xprintf("Copyright (C) 2000-2017 Andrew Makhorin, Department for "
          "Applied\n");
       xprintf("Informatics, Moscow Aviation Institute, Moscow, Russia. "
          "All rights\n");

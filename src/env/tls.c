@@ -21,11 +21,22 @@
 *  along with GLPK. If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "env.h"
 
+#ifndef TLS
 static void *tls = NULL;
-/* NOTE: in a re-entrant version of the package this variable should be
- * placed in the Thread Local Storage (TLS) */
+#else
+static TLS void *tls = NULL;
+/* this option allows running multiple independent instances of GLPK in
+ * different threads of a multi-threaded application, in which case the
+ * variable tls should be placed in the Thread Local Storage (TLS);
+ * it is assumed that the macro TLS is previously defined to something
+ * like '__thread', '_Thread_local', etc. */
+#endif
 
 /***********************************************************************
 *  NAME
