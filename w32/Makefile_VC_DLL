@@ -142,6 +142,7 @@ OBJSET = \
 ..\src\cglib\mirgen.obj \
 ..\src\colamd\colamd.obj \
 ..\src\env\alloc.obj \
+..\src\env\dll.obj \
 ..\src\env\dlsup.obj \
 ..\src\env\env.obj \
 ..\src\env\error.obj \
