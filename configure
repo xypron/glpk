@@ -752,6 +752,7 @@ with_gmp
 enable_dl
 enable_odbc
 enable_mysql
+enable_reentrant
 enable_dependency_tracking
 enable_shared
 enable_static
@@ -1391,6 +1392,7 @@ Optional Features:
   --enable-dl             enable shared library support [[default=no]]
   --enable-odbc           enable MathProg ODBC support [[default=no]]
   --enable-mysql          enable MathProg MySQL support [[default=no]]
+  --enable-reentrant      enable reentrancy support [[default=yes]]
   --enable-dependency-tracking
                           do not reject slow dependency extractors
   --disable-dependency-tracking
@@ -2777,6 +2779,17 @@ if test "${enable_mysql+set}" = set; then :
       esac
 else
   enable_mysql=no
+fi
+
+
+# Check whether --enable-reentrant was given.
+if test "${enable_reentrant+set}" = set; then :
+  enableval=$enable_reentrant; case $enableval in
+      yes | no) ;;
+      *) as_fn_error $? "invalid value \`$enableval' for --enable-reentrant" "$LINENO" 5;;
+      esac
+else
+  enable_reentrant=yes
 fi
 
 
@@ -11466,6 +11479,46 @@ cat >>confdefs.h <<_ACEOF
 #define MYSQL_DLNAME "$LIBMYSQL"
 _ACEOF
 
+else
+   { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether to enable reentrancy support" >&5
+$as_echo_n "checking whether to enable reentrancy support... " >&6; }
+if test "$enable_reentrant" = "yes"; then
+   { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for thread local storage (TLS) class specifier" >&5
+$as_echo_n "checking for thread local storage (TLS) class specifier... " >&6; }
+   keywords="_Thread_local __thread __declspec(thread)"
+   tls=none
+   for tls_keyword in $keywords; do
+      cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+         #include <stdlib.h>
+         static void foo(void)
+         {  static  $tls_keyword  int bar;
+            exit(1);
+         }
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  tls=$tls_keyword; break
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+   done
+   { $as_echo "$as_me:${as_lineno-$LINENO}: result: $tls" >&5
+$as_echo "$tls" >&6; }
+   if test "$tls" != "none"; then
+
+cat >>confdefs.h <<_ACEOF
+#define TLS $tls
+_ACEOF
+
+   else
+      as_fn_error $? "Reentrancy needs complier support for TLS" "$LINENO" 5
+   fi
 else
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
