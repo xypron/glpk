@@ -1,12 +1,11 @@
-/* multiseed.d (multithreading demo) */
+/* multiseed.c (multithreading demo) */
 
 /***********************************************************************
-*
 *  This code is part of GLPK (GNU Linear Programming Kit).
 *
 *  Author: Heinrich Schuchardt <xypron.glpk@gmx.de>
 *
-*  Copyright (C) 2000-2017 Andrew Makhorin, Department for Applied
+*  Copyright (C) 2017 Andrew Makhorin, Department for Applied
 *  Informatics, Moscow Aviation Institute, Moscow, Russia. All rights
 *  reserved. E-mail: <mao@gnu.org>.
 *

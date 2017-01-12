@@ -3,7 +3,7 @@
 /***********************************************************************
 *  This code is part of GLPK (GNU Linear Programming Kit).
 *
-*  Copyright (C) 2001-2013 Andrew Makhorin, Department for Applied
+*  Copyright (C) 2001-2017 Andrew Makhorin, Department for Applied
 *  Informatics, Moscow Aviation Institute, Moscow, Russia. All rights
 *  reserved. E-mail: <mao@gnu.org>.
 *
@@ -109,8 +109,11 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID
          major_version = version & 0xff;
          if (major_version < VISTA)
          {  MessageBoxA(NULL,
-               "This GLPK library uses thread local storage.\n"
-               "You need at least Windows Vista to utilize it.\n",
+               "The GLPK library called by this application is configur"
+               "ed to use thread local storage which is not fully suppo"
+               "rted by your version of Microsoft Windows.\n\n"
+               "Microsoft Windows Vista or a later version of Windows i"
+               "s required to run this application.",
                "GLPK", MB_OK | MB_ICONERROR);
             return FALSE;
          }
