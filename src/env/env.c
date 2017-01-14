@@ -21,6 +21,10 @@
 *  along with GLPK. If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "glpk.h"
 #include "env.h"
 
@@ -173,6 +177,66 @@ ENV *get_env_ptr(void)
 const char *glp_version(void)
 {     ENV *env = get_env_ptr();
       return env->version;
+}
+
+/***********************************************************************
+*  NAME
+*
+*  glp_config - determine library configuration
+*
+*  SYNOPSIS
+*
+*  const char *glp_config(const char *option);
+*
+*  DESCRIPTION
+*
+*  The routine glp_config determines some options which were specified
+*  on configuring the GLPK library.
+*
+*  RETURNS
+*
+*  The routine glp_config returns a pointer to a null-terminating
+*  string depending on the option inquired.
+*
+*  For option = "TLS" the routine returns the thread local storage
+*  class specifier used (e.g. "_Thread_local") if the GLPK library was
+*  configured to run in multi-threaded environment, or NULL otherwise.
+*
+*  For option = "ODBC_DLNAME" the routine returns the name of ODBC
+*  shared library if this option was enabled, or NULL otherwise.
+*
+*  For option = "MYSQL_DLNAME" the routine returns the name of MySQL
+*  shared library if this option was enabled, or NULL otherwise. */
+
+#define str(s) # s
+#define xstr(s) str(s)
+
+const char *glp_config(const char *option)
+{     const char *s;
+      if (strcmp(option, "TLS") == 0)
+#ifndef TLS
+         s = NULL;
+#else
+         s = xstr(TLS);
+#endif
+      else if (strcmp(option, "ODBC_DLNAME") == 0)
+#ifndef ODBC_DLNAME
+         s = NULL;
+#else
+         s = ODBC_DLNAME;
+#endif
+      else if (strcmp(option, "MYSQL_DLNAME") == 0)
+#ifndef MYSQL_DLNAME
+         s = NULL;
+#else
+         s = MYSQL_DLNAME;
+#endif
+      else
+      {  fprintf(stderr, "glp_config: invalid option\n");
+         fflush(stderr);
+         abort();
+      }
+      return s;
 }
 
 /***********************************************************************
