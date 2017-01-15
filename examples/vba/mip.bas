@@ -28,7 +28,7 @@ Option Explicit
 '   0.0 <= x1  integer
 '   0.0 <= x2  integer
 Sub mip()
-  Dim lp As Long
+  Dim lp As LongPtr
   Dim iocp As glp_iocp
   Dim ind(2) As Long
   Dim val(2) As Double
