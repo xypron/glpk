@@ -164,6 +164,7 @@ glp_minisat1
 glp_intfeas1
 glp_init_env
 glp_version
+glp_config
 glp_free_env
 glp_puts
 glp_printf
